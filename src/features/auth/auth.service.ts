@@ -1,6 +1,8 @@
 import httpStatus from 'http-status'
 import ApiError from '../../utils/ApiError'
 import prisma from '../../utils/usePrisma'
+import bcrypt from 'bcrypt'
+import authUtil from './auth.util'
 
 const login = async ({ email, password }: { email: string; password: string }) => {
   const account = await prisma.account.findUnique({
@@ -8,17 +10,15 @@ const login = async ({ email, password }: { email: string; password: string }) =
       email,
     },
   })
-
   if (!account || account.password === password) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password')
   }
-
-  return account
+  const token = authUtil.createToken(account.id.toString())
+  return { account, token }
 }
-const isEmailExist = async ({ email }: { email: string }) => {
-  const emailFound = await prisma.account.findUnique({ where: { email } })
-  if (emailFound) throw new ApiError(httpStatus.BAD_GATEWAY, 'Email already exist')
-  return false
+const getAccount = async ({ email }: { email: string }) => {
+  const account = await prisma.account.findUnique({ where: { email } })
+  return account
 }
 
 const register = async ({
@@ -32,8 +32,11 @@ const register = async ({
   phoneNumber: string
   faceData: string
 }) => {
-  const newAccount = await prisma.account.create({ data: { email, faceData, password, phoneNumber } })
-  return newAccount
+  const saltRounds = 10
+  const hash = await bcrypt.hash(password, saltRounds)
+  const newAccount = await prisma.account.create({ data: { email, faceData, password: hash, phoneNumber } })
+  const token = authUtil.createToken(newAccount.id.toString())
+  return { newAccount, token }
 }
 
-export default { login, isEmailExist, register }
+export default { login, getAccount, register }
