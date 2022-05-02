@@ -3,11 +3,12 @@ import httpStatus from 'http-status'
 import config from '../../configs/config'
 import ApiError from '../../utils/ApiError'
 import catchAsync from '../../utils/catchAsync'
+import accountService from '../account/account.service'
 import authService from './auth.service'
 
 const register = catchAsync(async (req: Request, res: Response) => {
-  const isEmailExist = await authService.getAccount({ email: req.body.email })
-  if (isEmailExist) throw new ApiError(httpStatus.BAD_REQUEST, 'Email already exist')
+  const isEmailExist = await accountService.isAccountExist({ email: req.body.email })
+  if (isEmailExist) throw new ApiError(httpStatus.BAD_REQUEST, 'Account already exist')
 
   const result = await authService.register(req.body)
   const { newAccount, token } = result
@@ -26,9 +27,4 @@ const login = catchAsync(async (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({ email: account.email, id: account.id })
 })
 
-const getAccount = catchAsync(async (req: Request, res: Response) => {
-  const isFound = await authService.getAccount(req.body)
-  res.status(httpStatus.OK).json(isFound)
-})
-
-export default { register, login, getAccount }
+export default { register, login }

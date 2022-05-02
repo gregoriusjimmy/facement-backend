@@ -7,6 +7,5 @@ const router = express.Router()
 
 router.post('/register', validate(authValidation.register), authController.register)
 router.post('/login', validate(authValidation.login), authController.login)
-router.post('/account/get', validate(authValidation.isEmailExist), authController.getAccount)
 
 export default router

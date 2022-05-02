@@ -17,9 +17,4 @@ const login = {
   }),
 }
 
-const isEmailExist = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-  }),
-}
-export default { login, register, isEmailExist }
+export default { login, register }

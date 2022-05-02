@@ -16,10 +16,6 @@ const login = async ({ email, password }: { email: string; password: string }) =
   const token = authUtil.createToken(account.id.toString())
   return { account, token }
 }
-const getAccount = async ({ email }: { email: string }) => {
-  const account = await prisma.account.findUnique({ where: { email } })
-  return account
-}
 
 const register = async ({
   email,
@@ -39,4 +35,4 @@ const register = async ({
   return { newAccount, token }
 }
 
-export default { login, getAccount, register }
+export default { login, register }
