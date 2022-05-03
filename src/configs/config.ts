@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import path from 'path'
+import path, { join } from 'path'
 import Joi from 'joi'
 
 dotenv.config({ path: path.join(__dirname, '../../.env') })
@@ -7,8 +7,8 @@ dotenv.config({ path: path.join(__dirname, '../../.env') })
 const envVarsSchema = Joi.object()
   .keys({
     NODE_ENV: Joi.string().valid('production', 'development', 'test').required(),
-    PORT: Joi.number().default(3000),
-    JWT_SECRET: Joi.string().required().description('JWT secret key'),
+    PORT: Joi.number().default(3001),
+    JWT_SECRET_KEY: Joi.string().required().description('JWT secret key'),
   })
   .unknown()
 
@@ -21,7 +21,7 @@ export default {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   jwt: {
-    secret: envVars.JWT_SECRET,
+    secret: envVars.JWT_SECRET_KEY,
     duration: 3 * 60 * 60 * 1000,
   },
 }
