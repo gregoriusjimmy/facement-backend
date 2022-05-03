@@ -30,6 +30,7 @@ const errorHandler = (err: ApiError, req: Request, res: Response, next: NextFunc
   const response = {
     code: statusCode,
     message,
+    ok: false,
     ...(config.env === 'development' && { stack: err.stack }),
   }
 
@@ -37,7 +38,7 @@ const errorHandler = (err: ApiError, req: Request, res: Response, next: NextFunc
     logger.error(err)
   }
 
-  res.status(statusCode).json({ ok: false, ...response })
+  res.status(statusCode).json({ ...response })
 }
 
 export { errorConverter, errorHandler }
