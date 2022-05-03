@@ -6,23 +6,31 @@ import ApiError from './utils/ApiError'
 import httpStatus from 'http-status'
 import { errorConverter, errorHandler } from './middlewares/error'
 import morgan from './configs/morgan'
+import faceApiSetup from './configs/face-api'
+import logger from './configs/logger'
+import compression from 'compression'
+
 const xss = require('xss-clean')
 
 const app = express()
 
+faceApiSetup()
+  .then(() => logger.info('face-api models loaded'))
+  .catch((e) => {
+    throw Error(e)
+  })
 app.use(morgan.successHandler)
 app.use(morgan.errorHandler)
 
 // set security HTTP headers
 app.use(helmet())
-
-app.use(express.json())
+app.use(express.json({ limit: '50mb' }))
 // parse urlencoded request body
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
 
 // sanitize request data
 app.use(xss())
-
+app.use(compression())
 // enable cors
 app.use(cors())
 app.options('*', cors)

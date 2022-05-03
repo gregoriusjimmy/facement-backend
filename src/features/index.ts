@@ -1,6 +1,7 @@
 import express from 'express'
 import authRoute from './auth/auth.router'
 import accountRoute from './account/account.router'
+import faceApiRoute from './faceApi/faceApi.router'
 
 const router = express.Router()
 
@@ -10,8 +11,12 @@ const defaultRoutes = [
     route: authRoute,
   },
   {
-    path: '/account',
+    path: '/accounts',
     route: accountRoute,
+  },
+  {
+    path: '/face-api',
+    route: faceApiRoute,
   },
 ]
 
