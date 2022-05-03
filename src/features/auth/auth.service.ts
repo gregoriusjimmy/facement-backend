@@ -21,17 +21,17 @@ const register = async ({
   email,
   password,
   phoneNumber,
-  faceData,
+  photo,
 }: {
   email: string
   password: string
   phoneNumber: string
-  faceData: string
+  photo: string
 }) => {
   const saltRounds = 10
   const hash = await bcrypt.hash(password, saltRounds)
-  const newAccount = await prisma.account.create({ data: { email, faceData, password: hash, phoneNumber } })
-  const token = authUtil.createToken(newAccount.id.toString())
+  const newAccount = await prisma.account.create({ data: { email, photo, password: hash, phoneNumber } })
+  const token = authUtil.createToken(newAccount.email)
   return { newAccount, token }
 }
 
