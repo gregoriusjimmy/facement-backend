@@ -1,8 +1,7 @@
 import Joi from 'joi'
+import { body } from '../../validations/base'
 
-const isAccountExist = {
-  body: Joi.object().keys({
-    email: Joi.string().required(),
-  }),
-}
+const isAccountExist = body.keys({
+  email: Joi.string().required(),
+})
 export default { isAccountExist }

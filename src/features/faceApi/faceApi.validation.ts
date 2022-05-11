@@ -1,8 +1,8 @@
 import Joi from 'joi'
+import { body } from '../../validations/base'
 
-const ihPhotoValid = {
-  body: Joi.object().keys({
-    photo: Joi.string().required(),
-  }),
-}
+const ihPhotoValid = body.keys({
+  photo: Joi.string().required(),
+})
+
 export default { ihPhotoValid }
