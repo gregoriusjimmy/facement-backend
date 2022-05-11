@@ -14,8 +14,7 @@ const register = catchAsync(async (req: Request, res: Response) => {
   const { newAccount, token } = result
   if (!newAccount) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create account')
 
-  res.cookie('jwt', token, { httpOnly: true, maxAge: config.jwt.duration })
-  res.status(httpStatus.CREATED).json({ email: newAccount.email, id: newAccount.id })
+  res.status(httpStatus.CREATED).json({ token, ok: true, message: 'Success create an account' })
 })
 
 const login = catchAsync(async (req: Request, res: Response) => {
@@ -23,8 +22,13 @@ const login = catchAsync(async (req: Request, res: Response) => {
   const { account, token } = result
   if (!account) throw new ApiError(httpStatus.NOT_FOUND, 'Account not found')
 
-  res.cookie('jwt', token, { httpOnly: true, maxAge: config.jwt.duration })
-  res.status(httpStatus.OK).json({ email: account.email, id: account.id })
+  res.status(httpStatus.OK).json({ token, ok: true, message: 'Login Success' })
 })
 
-export default { register, login }
+const verifyToken = catchAsync(async (req: Request, res: Response) => {
+  const isVerified = authService.verifyToken(req.body)
+  if (!isVerified) res.status(httpStatus.OK).json({ isVerified, ok: true, message: 'Verified' })
+  res.status(httpStatus.OK).json({ isVerified, ok: true, message: 'Not verified' })
+})
+
+export default { register, login, verifyToken }

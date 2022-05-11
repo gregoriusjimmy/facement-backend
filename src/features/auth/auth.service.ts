@@ -13,7 +13,7 @@ const login = async ({ email, password }: { email: string; password: string }) =
   if (!account || account.password === password) {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password')
   }
-  const token = authUtil.createToken(account.id.toString())
+  const token = authUtil.createToken(account.email)
   return { account, token }
 }
 
@@ -35,4 +35,9 @@ const register = async ({
   return { newAccount, token }
 }
 
-export default { login, register }
+const verifyToken = ({ context: { token } }: { context: { token: string } }) => {
+  if (authUtil.isJwtValid(token)) return true
+  return false
+}
+
+export default { login, register, verifyToken }
