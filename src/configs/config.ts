@@ -1,5 +1,5 @@
 import dotenv from 'dotenv'
-import path, { join } from 'path'
+import path from 'path'
 import Joi from 'joi'
 
 dotenv.config({ path: path.join(__dirname, '../../.env') })
@@ -22,6 +22,7 @@ export default {
   port: envVars.PORT,
   jwt: {
     secret: envVars.JWT_SECRET_KEY,
-    duration: 3 * 60 * 60 * 1000,
+    // in second
+    duration: 3 * 60 * 60,
   },
 }
