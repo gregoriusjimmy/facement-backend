@@ -1,8 +1,12 @@
+import { TAccountModel } from '../../types/common'
 import prisma from '../../utils/usePrisma'
 
-const isAccountExist = async ({ email }: { email: string }) => {
-  const account = await prisma.account.findUnique({ where: { email } })
-  return account ? true : false
+const findAccountByEmail = (email: string) => {
+  return prisma.account.findUnique({ where: { email } })
 }
 
-export default { isAccountExist }
+const createAccount = ({ email, password, phoneNumber, photo }: TAccountModel) => {
+  return prisma.account.create({ data: { email, photo, password: password, phoneNumber } })
+}
+
+export default { findAccountByEmail, createAccount }

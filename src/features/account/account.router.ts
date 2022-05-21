@@ -5,6 +5,6 @@ import validate from '../../middlewares/validate'
 
 const router = express.Router()
 
-router.post('/exist', validate(accountValidation.isAccountExist), accountController.isAccountExist)
+router.post('/exist', validate(accountValidation.isAccountExistSchema), accountController.isAccountExist)
 
 export default router
