@@ -5,8 +5,8 @@ import validate from '../../middlewares/validate'
 
 const router = express.Router()
 
-router.post('/register', validate(authValidation.register), authController.register)
-router.post('/login', validate(authValidation.login), authController.login)
-router.post('/verify/token', validate(authValidation.verifyToken), authController.verifyToken)
+router.post('/register', validate(authValidation.registerSchema), authController.register)
+router.post('/login', validate(authValidation.loginSchema), authController.login)
+router.post('/verify/token', validate(authValidation.verifyTokenSchema), authController.verifyToken)
 
 export default router
