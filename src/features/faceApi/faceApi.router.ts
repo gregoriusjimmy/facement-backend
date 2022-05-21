@@ -5,6 +5,6 @@ import validate from '../../middlewares/validate'
 
 const router = express.Router()
 
-router.post('/valid', validate(faceApiValidation.ihPhotoValid), faceApiController.isPhotoValid)
+router.post('/valid', validate(faceApiValidation.isPhotoValidSchema), faceApiController.isPhotoValid)
 
 export default router
