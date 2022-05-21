@@ -15,7 +15,7 @@ model Account {
   email   String  @unique 
   password String 
   phoneNumber String @db.VarChar(15)
-  balance Int @default(0)
+  balance Int @default(100)
   photo String
   transactions Transaction[]
   updatedAt DateTime @updatedAt
@@ -28,16 +28,11 @@ model Transaction {
   accountId Int
   amount Int
   type TransactionType
-  status TransactionStatus
   createdAt DateTime @default(now())
 }
 
 enum TransactionType {
   ADD
-  SUBSTRACT
+  SUBTRACT
 }
 
-enum TransactionStatus {
-  SUCCESS
-  FAILED
-}
