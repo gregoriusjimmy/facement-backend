@@ -1,4 +1,4 @@
-import { createResponse } from './../../utils/createResponse'
+import { formatResponse } from '../../utils/formatResponse'
 import { Response } from 'express'
 import httpStatus from 'http-status'
 import { ICustomRequest } from '../../types/common'
@@ -23,7 +23,7 @@ const register = catchAsync(async (req: ICustomRequest<IRegisterSchema>, res: Re
 
   res
     .status(httpStatus.CREATED)
-    .json(createResponse({ data: { token }, ok: true, message: 'Success create an account' }))
+    .json(formatResponse({ data: { token }, ok: true, message: 'Success create an account' }))
 })
 
 const login = catchAsync(async (req: ICustomRequest<ILoginSchema>, res: Response) => {
@@ -36,13 +36,13 @@ const login = catchAsync(async (req: ICustomRequest<ILoginSchema>, res: Response
 
   const token = authService.createToken(account.email)
 
-  res.status(httpStatus.OK).json(createResponse({ data: { token }, ok: true, message: 'Login Success' }))
+  res.status(httpStatus.OK).json(formatResponse({ data: { token }, ok: true, message: 'Login Success' }))
 })
 
 const verifyToken = catchAsync(async (req: ICustomRequest<IVerifyTokenSchema>, res: Response) => {
   const isVerified = authService.verifyToken(req.body.context.token)
   if (!isVerified) res.status(httpStatus.OK).json({ isVerified, ok: true, message: 'Verified' })
-  res.status(httpStatus.OK).json(createResponse({ data: { isVerified }, ok: true, message: 'Not verified' }))
+  res.status(httpStatus.OK).json(formatResponse({ data: { isVerified }, ok: true, message: 'Not verified' }))
 })
 
 export default { register, login, verifyToken }
