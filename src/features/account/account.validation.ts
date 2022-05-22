@@ -8,4 +8,8 @@ const isAccountExistSchema = body.keys({
 export interface IIsAccountExistSchema {
   email: string
 }
-export default { isAccountExistSchema }
+const getAccountBalanceSchema = body
+
+export interface IGetAccountBalanceSchema {}
+
+export default { isAccountExistSchema, getAccountBalanceSchema }

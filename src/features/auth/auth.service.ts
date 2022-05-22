@@ -1,29 +1,29 @@
 import httpStatus from 'http-status'
 import ApiError from '../../utils/ApiError'
-import jwt from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import config from '../../configs/config'
 import logger from '../../configs/logger'
+import { TTokenPayload } from '../../types/common'
 
-const decodeJwt = (token: string) => {
-  let decodedJwt
+const isTokenVerified = (token: string) => {
+  let isVerified = false
   jwt.verify(token, config.jwt.secret, (err: any, decoded: any) => {
     if (err) {
       logger.info('jwt verify err: ' + err)
-      throw new ApiError(httpStatus.UNAUTHORIZED, 'Token is not valid')
+      return
     }
-    decodedJwt = decoded
+    isVerified = true
   })
-  return decodedJwt
+  return isVerified
 }
 
-const verifyToken = (token: string) => {
-  const decodedJwt = decodeJwt(token)
-  if (decodedJwt) return true
-  return false
+const decodeToken = (token: string) => {
+  if (!isTokenVerified(token)) return null
+  return jwt.decode(token) as TTokenPayload
 }
 
-const createToken = (payload: any) => {
-  return jwt.sign({ payload }, config.jwt.secret, { expiresIn: config.jwt.duration })
+const createToken = (payload: TTokenPayload) => {
+  return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.duration })
 }
 
-export default { createToken, decodeJwt, verifyToken }
+export default { createToken, isTokenVerified, decodeToken }

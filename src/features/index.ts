@@ -1,27 +1,27 @@
 import express from 'express'
-import authRoute from './auth/auth.router'
-import accountRoute from './account/account.router'
-import faceApiRoute from './faceApi/faceApi.router'
-import transactionRoute from './transaction/transaction.router'
+import { authRouter } from './auth'
+import { accountRouter } from './account'
+import { faceApiRouter } from './faceApi'
+import { transactionRouter } from './transaction'
 
 const router = express.Router()
 
 const defaultRoutes = [
   {
     path: '/auth',
-    route: authRoute,
+    route: authRouter,
   },
   {
     path: '/accounts',
-    route: accountRoute,
+    route: accountRouter,
   },
   {
     path: '/face-api',
-    route: faceApiRoute,
+    route: faceApiRouter,
   },
   {
     path: '/transaction',
-    route: transactionRoute,
+    route: transactionRouter,
   },
 ]
 

@@ -2,7 +2,7 @@ import { Response } from 'express'
 import httpStatus from 'http-status'
 import { ICustomRequest } from '../../types/common'
 import catchAsync from '../../utils/catchAsync'
-import faceApiService from './faceApi.service'
+import { faceApiService } from './'
 import { IIsPhotoValidSchema } from './faceApi.validation'
 
 const isPhotoValid = catchAsync(async (req: ICustomRequest<IIsPhotoValidSchema>, res: Response) => {

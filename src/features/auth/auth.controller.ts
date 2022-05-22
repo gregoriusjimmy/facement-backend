@@ -3,10 +3,10 @@ import httpStatus from 'http-status'
 import { ICustomRequest } from '../../types/common'
 import ApiError from '../../utils/ApiError'
 import catchAsync from '../../utils/catchAsync'
-import accountService from '../account/account.service'
-import authService from './auth.service'
+import { authService } from './'
 import { ILoginSchema, IRegisterSchema, IVerifyTokenSchema } from './auth.validation'
 import bcrypt from 'bcrypt'
+import { accountService } from '../account'
 
 const register = catchAsync(async (req: ICustomRequest<IRegisterSchema>, res: Response) => {
   const { email, password, phoneNumber, photo } = req.body
@@ -29,13 +29,13 @@ const login = catchAsync(async (req: ICustomRequest<ILoginSchema>, res: Response
   const passwordMatch = await bcrypt.compare(password, account.password)
   if (!passwordMatch) throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password')
 
-  const token = authService.createToken(account.email)
+  const token = authService.createToken({ email: account.email })
 
   res.status(httpStatus.OK).json({ token })
 })
 
 const verifyToken = catchAsync(async (req: ICustomRequest<IVerifyTokenSchema>, res: Response) => {
-  const isVerified = authService.verifyToken(req.body.context.token)
+  const isVerified = authService.isTokenVerified(req.body.context.token)
   res.status(httpStatus.OK).json({ isVerified })
 })
 

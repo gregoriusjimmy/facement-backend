@@ -2,8 +2,9 @@ import httpStatus from 'http-status'
 import { Response } from 'express'
 import { ICustomRequest } from '../../types/common'
 import catchAsync from '../../utils/catchAsync'
-import accountService from './account.service'
-import { IIsAccountExistSchema } from './account.validation'
+import { IGetAccountBalanceSchema, IIsAccountExistSchema } from './account.validation'
+import { authService } from '../auth'
+import { accountService } from './'
 
 const isAccountExist = catchAsync(async (req: ICustomRequest<IIsAccountExistSchema>, res: Response) => {
   const isAccountExist = await accountService.findAccountByEmail(req.body.email)
@@ -12,4 +13,12 @@ const isAccountExist = catchAsync(async (req: ICustomRequest<IIsAccountExistSche
   })
 })
 
-export default { isAccountExist }
+const getBalance = catchAsync(async (req: ICustomRequest<IGetAccountBalanceSchema>, res: Response) => {
+  // authService.decodeJwt(req.body)
+  // const account = await accountService.findAccountByEmail(req.body.)
+  // res.status(httpStatus.OK).json({
+  //   account: account?.balance,
+  // })
+})
+
+export default { isAccountExist, getBalance }
