@@ -1,4 +1,3 @@
-import { formatResponse } from '../../utils/formatResponse'
 import { Response } from 'express'
 import httpStatus from 'http-status'
 import { ICustomRequest } from '../../types/common'
@@ -19,11 +18,7 @@ const register = catchAsync(async (req: ICustomRequest<IRegisterSchema>, res: Re
   const newAccount = await accountService.createAccount({ email, password: hash, phoneNumber, photo })
   if (!newAccount) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Failed to create account')
 
-  const token = authService.createToken(newAccount.email)
-
-  res
-    .status(httpStatus.CREATED)
-    .json(formatResponse({ data: { token }, ok: true, message: 'Success create an account' }))
+  res.status(httpStatus.CREATED).send()
 })
 
 const login = catchAsync(async (req: ICustomRequest<ILoginSchema>, res: Response) => {
@@ -31,18 +26,17 @@ const login = catchAsync(async (req: ICustomRequest<ILoginSchema>, res: Response
   const account = await accountService.findAccountByEmail(email)
   if (!account) throw new ApiError(httpStatus.NOT_FOUND, 'Account not found')
 
-  const passwordMatch = await bcrypt.compare(account.password, password)
-  if (!passwordMatch) throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password')
+  const passwordMatch = await bcrypt.compare(password, account.password)
+  if (!passwordMatch) throw new ApiError(httpStatus.BAD_REQUEST, 'Incorrect email or password')
 
   const token = authService.createToken(account.email)
 
-  res.status(httpStatus.OK).json(formatResponse({ data: { token }, ok: true, message: 'Login Success' }))
+  res.status(httpStatus.OK).json({ token })
 })
 
 const verifyToken = catchAsync(async (req: ICustomRequest<IVerifyTokenSchema>, res: Response) => {
   const isVerified = authService.verifyToken(req.body.context.token)
-  if (!isVerified) res.status(httpStatus.OK).json({ isVerified, ok: true, message: 'Verified' })
-  res.status(httpStatus.OK).json(formatResponse({ data: { isVerified }, ok: true, message: 'Not verified' }))
+  res.status(httpStatus.OK).json({ isVerified })
 })
 
 export default { register, login, verifyToken }
