@@ -1,7 +1,5 @@
-import authService from './auth.service'
-import authController from './auth.controller'
-import authMiddleware from './auth.middleware'
-import authRouter from './auth.router'
-import authValidation from './auth.validation'
-
-export { authService, authController, authMiddleware, authRouter, authValidation }
+export { default as authService } from './auth.service'
+export { default as authController } from './auth.controller'
+export { default as authMiddleware } from './auth.middleware'
+export { default as authRouter } from './auth.router'
+export { default as authValidation } from './auth.validation'

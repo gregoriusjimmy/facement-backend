@@ -12,7 +12,7 @@ const defaultRoutes = [
     route: authRouter,
   },
   {
-    path: '/accounts',
+    path: '/account',
     route: accountRouter,
   },
   {

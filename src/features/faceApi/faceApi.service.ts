@@ -3,16 +3,14 @@ import * as faceapi from 'face-api.js'
 import * as canvas from 'canvas'
 import ApiError from '../../utils/ApiError'
 
-const ihPhotoValid = async ({ photo }: { photo: string }) => {
+const constructFaceDescriptor = async (photo: string) => {
   try {
     const image = (await canvas.loadImage(photo)) as any
-    const fullFaceDescription = await faceapi
-      .detectSingleFace(image, new faceapi.TinyFaceDetectorOptions())
-      .withFaceLandmarks()
-      .withFaceDescriptor()
+    const fullFaceDescription = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptor()
 
-    if (fullFaceDescription) return true
-    return false
+    if (!fullFaceDescription) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
+
+    return fullFaceDescription.descriptor
   } catch (error) {
     throw new ApiError(
       httpStatus.INTERNAL_SERVER_ERROR,
@@ -21,4 +19,18 @@ const ihPhotoValid = async ({ photo }: { photo: string }) => {
   }
 }
 
-export default { ihPhotoValid }
+const generateFaceSimilarity = async (descriptor: Float32Array, photo: string) => {
+  const THRESHOLD = 0.3
+  try {
+    const photoDescriptor = await constructFaceDescriptor(photo)
+    const distance = faceapi.utils.round(faceapi.euclideanDistance(descriptor, photoDescriptor))
+    const match = distance < THRESHOLD
+    return { distance, match }
+  } catch (error) {
+    throw new ApiError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      error instanceof Error ? error.message : 'Something went wrong'
+    )
+  }
+}
+export default { constructFaceDescriptor, generateFaceSimilarity }

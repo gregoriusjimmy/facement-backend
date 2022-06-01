@@ -6,8 +6,8 @@ import { faceApiService } from './'
 import { IIsPhotoValidSchema } from './faceApi.validation'
 
 const isPhotoValid = catchAsync(async (req: ICustomRequest<IIsPhotoValidSchema>, res: Response) => {
-  const isPhotoValid = await faceApiService.ihPhotoValid(req.body)
-  res.status(httpStatus.OK).json({ isValid: isPhotoValid })
+  const isPhotoValid = await faceApiService.constructFaceDescriptor(req.body.photo)
+  res.status(httpStatus.OK).json({ isValid: !!isPhotoValid })
 })
 
 export default { isPhotoValid }

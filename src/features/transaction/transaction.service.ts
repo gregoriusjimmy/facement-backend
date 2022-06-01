@@ -4,8 +4,15 @@ import prisma from '../../utils/usePrisma'
 const topUp = async ({ accountId, amount }: { accountId: number; amount: number }) => {
   const createdTransaction = createTransaction(accountId, amount, 'ADD')
   const updatedAccount = addAccountBalance(accountId, amount)
-  const [transaction] = await prisma.$transaction([createdTransaction, updatedAccount])
-  return transaction
+  const [transaction, account] = await prisma.$transaction([createdTransaction, updatedAccount])
+  return { transaction, account }
+}
+
+const pay = async ({ accountId, amount }: { accountId: number; amount: number }) => {
+  const createdTransaction = createTransaction(accountId, amount, 'SUBTRACT')
+  const updatedAccount = subtractAccountBalance(accountId, amount)
+  const [transaction, account] = await prisma.$transaction([createdTransaction, updatedAccount])
+  return { transaction, account }
 }
 
 const createTransaction = (accountId: number, amount: number, type: TransactionType) => {
@@ -31,8 +38,7 @@ const addAccountBalance = (accountId: number, amount: number) => {
   })
 }
 
-const subtractAccountBalance = async (accountId: number, amount: number) => {
-  // TODO: add decrement validation
+const subtractAccountBalance = (accountId: number, amount: number) => {
   return prisma.account.update({
     where: {
       id: accountId,
@@ -45,4 +51,4 @@ const subtractAccountBalance = async (accountId: number, amount: number) => {
   })
 }
 
-export default { topUp, addAccountBalance, subtractAccountBalance, createTransaction }
+export default { topUp, pay, addAccountBalance, subtractAccountBalance, createTransaction }

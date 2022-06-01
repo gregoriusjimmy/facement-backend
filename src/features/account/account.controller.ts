@@ -2,9 +2,15 @@ import httpStatus from 'http-status'
 import { Response } from 'express'
 import { ICustomRequest } from '../../types/common'
 import catchAsync from '../../utils/catchAsync'
-import { IGetAccountBalanceSchema, IIsAccountExistSchema } from './account.validation'
-import { authService } from '../auth'
+import {
+  IGetAccountBalanceSchema,
+  IGetAccountSchema,
+  IIsAccountExistSchema,
+  IIsAccountWithPhoneNumberExistSchema,
+  IValidatePhoneNumberSchema,
+} from './account.validation'
 import { accountService } from './'
+import ApiError from '../../utils/ApiError'
 
 const isAccountExist = catchAsync(async (req: ICustomRequest<IIsAccountExistSchema>, res: Response) => {
   const isAccountExist = await accountService.findAccountByEmail(req.body.email)
@@ -13,12 +19,35 @@ const isAccountExist = catchAsync(async (req: ICustomRequest<IIsAccountExistSche
   })
 })
 
-const getBalance = catchAsync(async (req: ICustomRequest<IGetAccountBalanceSchema>, res: Response) => {
-  // authService.decodeJwt(req.body)
-  // const account = await accountService.findAccountByEmail(req.body.)
-  // res.status(httpStatus.OK).json({
-  //   account: account?.balance,
-  // })
+const isAccountWithPhoneNumberExist = catchAsync(
+  async (req: ICustomRequest<IIsAccountWithPhoneNumberExistSchema>, res: Response) => {
+    const isAccountExist = await accountService.findAccountByPhoneNumber(req.body.email)
+    res.status(httpStatus.OK).json({
+      isAccountExist: !!isAccountExist,
+    })
+  }
+)
+
+const getAccount = catchAsync(async (req: ICustomRequest<IGetAccountSchema>, res: Response) => {
+  const account = await accountService.findAccountByEmail(res.locals.email)
+  if (!account) throw new ApiError(httpStatus.NOT_FOUND, 'Error, account not found')
+  const { id, email, balance, phoneNumber } = account
+  res.status(httpStatus.OK).json({
+    account: {
+      id,
+      email,
+      balance,
+      phoneNumber,
+    },
+  })
 })
 
-export default { isAccountExist, getBalance }
+const validatePhoneNumber = catchAsync(async (req: ICustomRequest<IValidatePhoneNumberSchema>, res: Response) => {
+  const account = await accountService.findAccountByEmail(res.locals.email)
+  if (!account) throw new ApiError(httpStatus.NOT_FOUND, 'Error, account not found')
+  const { phoneNumber } = account
+  const isValid = req.body.phoneNumber === phoneNumber
+  res.status(httpStatus.OK).json({ isValid })
+})
+
+export default { isAccountExist, getAccount, validatePhoneNumber, isAccountWithPhoneNumberExist }

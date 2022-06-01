@@ -10,4 +10,16 @@ export interface ITopUpSchema {
   accountId: number
   amount: number
 }
-export default { topUpSchema }
+
+const paySchema = body.keys({
+  phoneNumber: Joi.string().required(),
+  photo: Joi.string().required(),
+  amount: Joi.number().required(),
+})
+
+export interface IPaySchema {
+  phoneNumber: string
+  photo: string
+  amount: number
+}
+export default { topUpSchema, paySchema }

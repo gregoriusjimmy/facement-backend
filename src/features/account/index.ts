@@ -1,6 +1,4 @@
-import accountService from './account.service'
-import accountController from './account.controller'
-import accountRouter from './account.router'
-import accountValidation from './account.validation'
-
-export { accountService, accountController, accountRouter, accountValidation }
+export { default as accountService } from './account.service'
+export { default as accountController } from './account.controller'
+export { default as accountRouter } from './account.router'
+export { default as accountValidation } from './account.validation'
