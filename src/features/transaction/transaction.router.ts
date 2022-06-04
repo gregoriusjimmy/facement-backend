@@ -12,5 +12,12 @@ router.post(
   authMiddleware.requireAuth,
   transactionController.topUp
 )
+router.post('/pay', validate(transactionValidation.paySchema), transactionController.pay)
+router.post(
+  '/get/lastFive',
+  validate(transactionValidation.getLastFiveTransactions),
+  authMiddleware.requireAuth,
+  transactionController.getLastFiveTransactions
+)
 
 export default router

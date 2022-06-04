@@ -22,4 +22,11 @@ export interface IPaySchema {
   photo: string
   amount: number
 }
-export default { topUpSchema, paySchema }
+const getLastFiveTransactions = body.keys({
+  accountId: Joi.number().required(),
+})
+
+export interface IGetLastFiveTransactions {
+  accountId: number
+}
+export default { topUpSchema, paySchema, getLastFiveTransactions }

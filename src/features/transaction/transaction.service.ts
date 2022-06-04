@@ -51,4 +51,15 @@ const subtractAccountBalance = (accountId: number, amount: number) => {
   })
 }
 
-export default { topUp, pay, addAccountBalance, subtractAccountBalance, createTransaction }
+const getTransactionsByAccountId = (accountId: number) => {
+  return prisma.transaction.findMany({
+    where: {
+      accountId,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  })
+}
+
+export default { topUp, pay, addAccountBalance, subtractAccountBalance, createTransaction, getTransactionsByAccountId }

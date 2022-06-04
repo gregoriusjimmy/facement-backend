@@ -6,7 +6,7 @@ import catchAsync from '../../utils/catchAsync'
 import { accountService } from '../account'
 import { faceApiService } from '../faceApi'
 import { transactionService } from './'
-import { IPaySchema, ITopUpSchema } from './transaction.validation'
+import { IGetLastFiveTransactions, IPaySchema, ITopUpSchema } from './transaction.validation'
 
 const topUp = catchAsync(async (req: ICustomRequest<ITopUpSchema>, res: Response) => {
   const { transaction, account } = await transactionService.topUp(req.body)
@@ -15,12 +15,12 @@ const topUp = catchAsync(async (req: ICustomRequest<ITopUpSchema>, res: Response
 
 const pay = catchAsync(async (req: ICustomRequest<IPaySchema>, res: Response) => {
   const account = await accountService.findAccountByPhoneNumber(req.body.phoneNumber)
-  if (!account) throw new ApiError(httpStatus.NOT_FOUND, "Err doesn't exist")
+  if (!account) throw new ApiError(httpStatus.NOT_FOUND, "Err account doesn't exist")
 
   const descriptor = await faceApiService.constructFaceDescriptor(req.body.photo)
-
+  if (!descriptor) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
   const { match } = await faceApiService.generateFaceSimilarity(descriptor, req.body.photo)
-  if (match) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not match')
+  if (!match) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not match')
 
   if (account.balance - req.body.amount < 0)
     throw new ApiError(
@@ -31,4 +31,10 @@ const pay = catchAsync(async (req: ICustomRequest<IPaySchema>, res: Response) =>
   res.status(httpStatus.CREATED).json({ transaction: result.transaction, balance: result.account.balance })
 })
 
-export default { topUp, pay }
+const getLastFiveTransactions = catchAsync(async (req: ICustomRequest<IGetLastFiveTransactions>, res: Response) => {
+  const transactions = await transactionService.getTransactionsByAccountId(req.body.accountId)
+
+  res.status(httpStatus.OK).json({ transactions: transactions.slice(0, 5) })
+})
+
+export default { topUp, pay, getLastFiveTransactions }
