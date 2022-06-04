@@ -3,7 +3,6 @@ import { Response } from 'express'
 import { ICustomRequest } from '../../types/common'
 import catchAsync from '../../utils/catchAsync'
 import {
-  IGetAccountBalanceSchema,
   IGetAccountSchema,
   IIsAccountExistSchema,
   IIsAccountWithPhoneNumberExistSchema,
@@ -21,7 +20,7 @@ const isAccountExist = catchAsync(async (req: ICustomRequest<IIsAccountExistSche
 
 const isAccountWithPhoneNumberExist = catchAsync(
   async (req: ICustomRequest<IIsAccountWithPhoneNumberExistSchema>, res: Response) => {
-    const isAccountExist = await accountService.findAccountByPhoneNumber(req.body.email)
+    const isAccountExist = await accountService.findAccountByPhoneNumber(req.body.phoneNumber)
     res.status(httpStatus.OK).json({
       isAccountExist: !!isAccountExist,
     })

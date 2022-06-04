@@ -10,11 +10,11 @@ export interface IIsAccountExistSchema {
 }
 
 const isAccountWithPhoneNumberExistSchema = body.keys({
-  email: Joi.string().required(),
+  phoneNumber: Joi.string().required(),
 })
 
 export interface IIsAccountWithPhoneNumberExistSchema {
-  email: string
+  phoneNumber: string
 }
 
 const validatePhoneNumberSchema = body.keys({
