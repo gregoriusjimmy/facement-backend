@@ -36,7 +36,6 @@ const getAccount = catchAsync(async (req: ICustomRequest<IGetAccountSchema>, res
       id,
       email,
       balance,
-      phoneNumber,
     },
   })
 })
