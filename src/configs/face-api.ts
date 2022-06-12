@@ -3,7 +3,7 @@ import * as canvas from 'canvas'
 import path from 'path'
 
 const loadModels = async () => {
-  const MODELS_LOCATION = path.join(__dirname, '..', 'models')
+  const MODELS_LOCATION = path.join(__dirname, '..', '..', 'models')
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(MODELS_LOCATION)
   await faceapi.nets.faceLandmark68Net.loadFromDisk(MODELS_LOCATION)
   await faceapi.nets.faceRecognitionNet.loadFromDisk(MODELS_LOCATION)
