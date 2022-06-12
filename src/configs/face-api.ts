@@ -1,7 +1,7 @@
 import * as faceapi from 'face-api.js'
 import * as canvas from 'canvas'
 import path from 'path'
-require('@tensorflow/tfjs-node')
+import '@tensorflow/tfjs-node'
 
 const loadModels = async () => {
   const MODELS_LOCATION = path.join(__dirname, '..', '..', 'models')
