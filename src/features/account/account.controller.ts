@@ -30,7 +30,7 @@ const isAccountWithPhoneNumberExist = catchAsync(
 const getAccount = catchAsync(async (req: ICustomRequest<IGetAccountSchema>, res: Response) => {
   const account = await accountService.findAccountByEmail(res.locals.email)
   if (!account) throw new ApiError(httpStatus.NOT_FOUND, 'Error, account not found')
-  const { id, email, balance, phoneNumber } = account
+  const { id, email, balance } = account
   res.status(httpStatus.OK).json({
     account: {
       id,
