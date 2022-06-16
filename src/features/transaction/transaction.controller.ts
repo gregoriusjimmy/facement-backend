@@ -17,11 +17,14 @@ const pay = catchAsync(async (req: ICustomRequest<IPaySchema>, res: Response) =>
   const account = await accountService.findAccountByPhoneNumber(req.body.phoneNumber)
   if (!account) throw new ApiError(httpStatus.NOT_FOUND, "Err account doesn't exist")
 
-  const descriptor = await faceApiService.constructFaceDescriptor(req.body.photo)
-  if (!descriptor) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
   console.time('generateFaceSimilarity')
-  const { match } = await faceApiService.generateFaceSimilarity(descriptor, req.body.photo)
+  const descriptorPhotoInput = await faceApiService.constructFaceDescriptor(req.body.photo)
+  const descriptorPhotoDB = await faceApiService.constructFaceDescriptor(account.photo)
+  if (!descriptorPhotoInput) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
+  if (!descriptorPhotoDB) throw new ApiError(httpStatus.INTERNAL_SERVER_ERROR, 'Server error')
+  const { match } = await faceApiService.generateFaceSimilarity(descriptorPhotoInput, descriptorPhotoDB)
   console.timeEnd('generateFaceSimilarity')
+
   if (!match) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not match')
 
   if (account.balance - req.body.amount < 0)

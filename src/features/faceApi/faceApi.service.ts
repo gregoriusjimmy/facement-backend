@@ -11,6 +11,7 @@ const constructFaceDescriptor = async (photo: string) => {
       .detectSingleFace(image, new faceapi.TinyFaceDetectorOptions())
       .withFaceLandmarks()
       .withFaceDescriptor()
+
     return fullFaceDescription?.descriptor
   } catch (error) {
     throw new ApiError(
@@ -20,12 +21,10 @@ const constructFaceDescriptor = async (photo: string) => {
   }
 }
 
-const generateFaceSimilarity = async (descriptor: Float32Array, photo: string) => {
+const generateFaceSimilarity = async (descriptor1: Float32Array, descriptor2: Float32Array) => {
   const THRESHOLD = 0.3
   try {
-    const photoDescriptor = await constructFaceDescriptor(photo)
-    if (!photoDescriptor) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
-    const distance = faceapi.euclideanDistance(descriptor, photoDescriptor)
+    const distance = faceapi.euclideanDistance(descriptor1, descriptor2)
     const match = distance < THRESHOLD
     logger.info('face similarity generated')
     logger.info(`distance: ${distance}`)
