@@ -22,7 +22,7 @@ const generateFaceSimilarity = async (descriptor: Float32Array, photo: string) =
   try {
     const photoDescriptor = await constructFaceDescriptor(photo)
     if (!photoDescriptor) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
-    const distance = faceapi.utils.round(faceapi.euclideanDistance(descriptor, photoDescriptor))
+    const distance = faceapi.euclideanDistance(descriptor, photoDescriptor)
     const match = distance < THRESHOLD
     logger.info('face similarity generated')
     logger.info({ distance, match })

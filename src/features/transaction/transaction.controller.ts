@@ -19,7 +19,9 @@ const pay = catchAsync(async (req: ICustomRequest<IPaySchema>, res: Response) =>
 
   const descriptor = await faceApiService.constructFaceDescriptor(req.body.photo)
   if (!descriptor) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not detected')
+  console.time('generateFaceSimilarity')
   const { match } = await faceApiService.generateFaceSimilarity(descriptor, req.body.photo)
+  console.timeEnd('generateFaceSimilarity')
   if (!match) throw new ApiError(httpStatus.BAD_REQUEST, 'Face is not match')
 
   if (account.balance - req.body.amount < 0)
