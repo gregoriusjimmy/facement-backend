@@ -25,8 +25,8 @@ const generateFaceSimilarity = async (descriptor: Float32Array, photo: string) =
     const distance = faceapi.euclideanDistance(descriptor, photoDescriptor)
     const match = distance < THRESHOLD
     logger.info('face similarity generated')
-    logger.info('distance: ', distance)
-    logger.info('match:', match)
+    logger.info(`distance: ${distance}`)
+    logger.info(`match: ${match}`)
     return { distance, match }
   } catch (error) {
     throw new ApiError(
