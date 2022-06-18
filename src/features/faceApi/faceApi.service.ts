@@ -7,10 +7,7 @@ import logger from '../../configs/logger'
 const constructFaceDescriptor = async (photo: string) => {
   try {
     const image = (await canvas.loadImage(photo)) as any
-    const fullFaceDescription = await faceapi
-      .detectSingleFace(image, new faceapi.TinyFaceDetectorOptions())
-      .withFaceLandmarks()
-      .withFaceDescriptor()
+    const fullFaceDescription = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptor()
 
     return fullFaceDescription?.descriptor
   } catch (error) {
