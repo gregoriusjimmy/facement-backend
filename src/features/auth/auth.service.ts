@@ -1,6 +1,4 @@
-import httpStatus from 'http-status'
-import ApiError from '../../utils/ApiError'
-import jwt, { JwtPayload } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import config from '../../configs/config'
 import logger from '../../configs/logger'
 import { TTokenPayload } from '../../types/common'

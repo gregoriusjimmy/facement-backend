@@ -2,12 +2,7 @@ import httpStatus from 'http-status'
 import { Response } from 'express'
 import { ICustomRequest } from '../../types/common'
 import catchAsync from '../../utils/catchAsync'
-import {
-  IGetAccountSchema,
-  IIsAccountExistSchema,
-  IIsAccountWithPhoneNumberExistSchema,
-  IValidatePhoneNumberSchema,
-} from './account.validation'
+import { IGetAccountSchema, IIsAccountExistSchema, IIsAccountWithPhoneNumberExistSchema } from './account.validation'
 import { accountService } from './'
 import ApiError from '../../utils/ApiError'
 
@@ -40,12 +35,4 @@ const getAccount = catchAsync(async (req: ICustomRequest<IGetAccountSchema>, res
   })
 })
 
-const validatePhoneNumber = catchAsync(async (req: ICustomRequest<IValidatePhoneNumberSchema>, res: Response) => {
-  const account = await accountService.findAccountByEmail(res.locals.email)
-  if (!account) throw new ApiError(httpStatus.NOT_FOUND, 'Error, account not found')
-  const { phoneNumber } = account
-  const isValid = req.body.phoneNumber === phoneNumber
-  res.status(httpStatus.OK).json({ isValid })
-})
-
-export default { isAccountExist, getAccount, validatePhoneNumber, isAccountWithPhoneNumberExist }
+export default { isAccountExist, getAccount, isAccountWithPhoneNumberExist }

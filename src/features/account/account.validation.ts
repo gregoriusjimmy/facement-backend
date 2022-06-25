@@ -17,13 +17,6 @@ export interface IIsAccountWithPhoneNumberExistSchema {
   phoneNumber: string
 }
 
-const validatePhoneNumberSchema = body.keys({
-  phoneNumber: Joi.string().required(),
-})
-export interface IValidatePhoneNumberSchema {
-  phoneNumber: string
-}
-
 const getAccountSchema = body
 
 export interface IGetAccountSchema {}
@@ -36,6 +29,5 @@ export default {
   isAccountExistSchema,
   getAccountBalanceSchema,
   getAccountSchema,
-  validatePhoneNumberSchema,
   isAccountWithPhoneNumberExistSchema,
 }
